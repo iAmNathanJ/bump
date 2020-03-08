@@ -25,7 +25,7 @@ if (import.meta.main) {
 }
 
 async function bump(to: "major" | "minor" | "patch") {
-  const project = await import(projectFilePath);
+  const project = await import("file://" + projectFilePath);
   let [major, minor, patch] = project.version
     .split(".")
     .map((n: string) => parseInt(n));
