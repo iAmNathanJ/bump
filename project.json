@@ -1,0 +1,10 @@
+{
+  "name": "bump",
+  "version": "1.0.0",
+  "replaceVersion": [
+    "README.md"
+  ],
+  "deno": {
+    "version": "0.35.0"
+  }
+}
