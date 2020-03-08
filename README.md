@@ -10,7 +10,7 @@ $ deno install --allow-read --allow-write --allow-run bump https://denopkg.com/i
 
 Add a `project.json` to the root of your project:
 
-```json
+```js
 {
   "name": "your-deno-module", // required 
   "version": "0.0.0",         // required
@@ -19,7 +19,6 @@ Add a `project.json` to the root of your project:
   ],
   "signGitTag": true,         // optional
 }
-
 ```
 
 Run `bump` in the root of your project:
