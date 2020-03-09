@@ -6,8 +6,7 @@ jobs:
     strategy:
       matrix:
         deno: ['v0.35.0']
-        os: [ubuntu-latest, macOS-latest]
-        # os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     name: Deno ${{ matrix.deno }} test in ${{ matrix.os }}
     steps:
       - uses: actions/checkout@master
