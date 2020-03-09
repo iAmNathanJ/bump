@@ -57,7 +57,7 @@ async function bump(to: "major" | "minor" | "patch") {
   ]);
 
   await gitCommit(newVersion, project.name);
-  await createTag(newVersion);
+  await createTag(newVersion, project.signGitTag);
 }
 
 async function validateNewVersion(version: string | undefined) {
