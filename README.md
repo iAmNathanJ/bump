@@ -17,7 +17,7 @@ Add a `project.json` to the root of your project:
   "replaceVersion": [         // optional
     "README.md"
   ],
-  "signGitTag": true,         // optional
+  "signGitTag": true          // optional
 }
 ```
 
