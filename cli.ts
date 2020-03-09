@@ -79,7 +79,7 @@ async function validateNewVersion(version: string | undefined) {
 
 async function gitStatusClean() {
   const git = run({
-    args: ["git", "status", "-s"],
+    args: ["git", "status", "--porcelain"],
     stdout: "piped"
   });
   const output = await git.output();

@@ -26,9 +26,10 @@ async function setup(config = {}) {
   await writeFile(`${projectRoot}/project.json`, encode(projectConfig));
   await writeFile(`${projectRoot}/README.md`, encode(readme));
   await run("git init");
-  await run("git config commit.gpgsign false");
+  await run("git config user.name testuser");
+  await run("git config user.email testuser@test.com");
   await run("git add .");
-  await run("git commit -m initial");
+  await run("git commit --no-gpg-sign -m 'initial'");
 
   async function run(args: string) {
     const cmd = Deno.run({
@@ -38,11 +39,11 @@ async function setup(config = {}) {
       stderr: "piped"
     });
 
-    return {
-      status: await cmd.status(),
-      stdout: decode(await cmd.output()),
-      stderr: decode(await cmd.stderrOutput())
-    };
+    const status = await cmd.status();
+    const stdout = decode(await cmd.output());
+    const stderr = decode(await cmd.stderrOutput());
+
+    return { status, stdout, stderr };
   }
 
   async function bump(args: string) {
