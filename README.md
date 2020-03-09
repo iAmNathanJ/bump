@@ -1,5 +1,7 @@
 # `bump`
 
+![ci](https://github.com/iAmNathanJ/bump/workflows/ci/badge.svg?branch=master)
+
 This is my personal tool for versioning Deno projects. You might find it useful as well.
 
 ```sh
