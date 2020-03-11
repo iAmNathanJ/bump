@@ -1,6 +1,6 @@
 # `bump`
 
-![ci](https://github.com/iAmNathanJ/bump/workflows/ci/badge.svg?branch=master)
+![deno@v0.35.0](https://github.com/iAmNathanJ/bump/workflows/deno@v0.35.0/badge.svg)
 
 This is my personal tool for versioning Deno projects. You might find it useful as well.
 
