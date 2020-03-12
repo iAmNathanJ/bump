@@ -28,8 +28,9 @@ async function setup(config = {}) {
   await run("git init");
   await run("git config user.name testuser");
   await run("git config user.email testuser@test.com");
+  await run("git config commit.gpgsign false");
   await run("git add .");
-  await run("git commit --no-gpg-sign -m 'initial'");
+  await run("git commit -m 'initial'");
 
   async function run(args: string) {
     const cmd = Deno.run({
@@ -145,7 +146,7 @@ test("creates a new commit", async () => {
 });
 
 test("creates a new tag", async () => {
-  const { projectRoot, run, bump, cleanup } = await setup();
+  const { run, bump, cleanup } = await setup();
 
   await bump("minor");
   const { stdout } = await run("git tag --list v1.1.0");
