@@ -1,11 +1,11 @@
 # `bump`
 
-![deno@v0.36.0](https://github.com/iAmNathanJ/bump/workflows/deno@v0.36.0/badge.svg)
+![deno@v1.0.0](https://github.com/iAmNathanJ/bump/workflows/deno@v1.0.0/badge.svg)
 
 This is my personal tool for versioning Deno projects. You might find it useful as well.
 
 ```sh
-$ deno install --allow-read --allow-write --allow-run bump https://denopkg.com/iamnathanj/bump@v1.1.0/cli.ts
+$ deno install --allow-read --allow-write --allow-run -n bump https://denopkg.com/iamnathanj/bump@v1.1.0/cli.ts
 ```
 
 ## Usage

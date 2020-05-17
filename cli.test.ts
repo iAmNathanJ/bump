@@ -1,6 +1,5 @@
 import { assert, assertEquals } from "./dev-deps.ts";
 import { encode, decode, resolve } from "./deps.ts";
-
 const { test, makeTempDir, readFile, writeFile } = Deno;
 
 /**
@@ -14,12 +13,12 @@ async function setup(config = {}) {
     name: "bump",
     version: "1.0.0",
     replaceVersion: [
-      "README.md"
+      "README.md",
     ],
     deno: {
-      version: "0.35.0"
+      version: "1.0.0",
     },
-    ...config
+    ...config,
   });
   const readme = "https://denopkg.com/iamnathanj/bump@v1.0.0/cli.ts";
 
@@ -35,32 +34,40 @@ async function setup(config = {}) {
   async function run(args: string) {
     const cmd = Deno.run({
       cwd: projectRoot,
-      args: args.split(" "),
+      cmd: args.split(" "),
       stdout: "piped",
-      stderr: "piped"
+      stderr: "piped",
     });
 
     const status = await cmd.status();
     const stdout = decode(await cmd.output());
     const stderr = decode(await cmd.stderrOutput());
 
+    cmd.close();
+
     return { status, stdout, stderr };
   }
 
   async function bump(args: string) {
     return run(
-      `deno run --allow-read --allow-write --allow-run ${resolve(
-        "./cli.ts"
-      )} ${args}`
+      `deno run --allow-read --allow-write --allow-run ${
+        resolve(
+          "./cli.ts",
+        )
+      } ${args}`,
     );
   }
 
   async function cleanup() {
-    await Deno.run({
-      args: ["rm", "-rf", projectRoot],
+    const cmd = Deno.run({
+      cmd: ["rm", "-rf", projectRoot],
       stdout: "piped",
-      stderr: "piped"
-    }).status();
+      stderr: "piped",
+    });
+    await cmd.status();
+    cmd.stdout?.close();
+    cmd.stderr?.close();
+    cmd.close();
   }
 
   return { projectRoot, run, bump, cleanup };
@@ -91,7 +98,7 @@ test("major", async () => {
 
   await bump("major");
   const config = JSON.parse(
-    decode(await readFile(`${projectRoot}/project.json`))
+    decode(await readFile(`${projectRoot}/project.json`)),
   );
 
   assertEquals(config.version, "2.0.0");
@@ -103,7 +110,7 @@ test("minor", async () => {
 
   await bump("minor");
   const config = JSON.parse(
-    decode(await readFile(`${projectRoot}/project.json`))
+    decode(await readFile(`${projectRoot}/project.json`)),
   );
 
   assertEquals(config.version, "1.1.0");
@@ -115,7 +122,7 @@ test("patch", async () => {
 
   await bump("patch");
   const config = JSON.parse(
-    decode(await readFile(`${projectRoot}/project.json`))
+    decode(await readFile(`${projectRoot}/project.json`)),
   );
 
   assertEquals(config.version, "1.0.1");

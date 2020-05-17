@@ -25,7 +25,9 @@ if (import.meta.main) {
 }
 
 async function bump(to: "major" | "minor" | "patch") {
-  const { default: project } = await import("file://" + projectFilePath);
+  const project = JSON.parse(
+    decode(await readFile(projectFilePath)),
+  );
   let [major, minor, patch] = project.version
     .split(".")
     .map((n: string) => parseInt(n));
@@ -48,12 +50,12 @@ async function bump(to: "major" | "minor" | "patch") {
   const newProjectContent = JSON.stringify(
     { ...project, version: newVersion },
     null,
-    2
+    2,
   );
 
   await Promise.all([
     writeFile(projectFilePath, encode(newProjectContent + "\n")),
-    updateTemplates(project.version, newVersion, project.replaceVersion)
+    updateTemplates(project.version, newVersion, project.replaceVersion),
   ]);
 
   await gitCommit(newVersion, project.name);
@@ -67,9 +69,8 @@ async function validateNewVersion(version: string | undefined) {
 
   if (!(await gitStatusClean())) {
     return exit(
-      "git working tree not clean, please commit all changes before versioning"
+      "git working tree not clean, please commit all changes before versioning",
     );
-    return;
   }
 
   if (await tagExists(version)) {
@@ -79,43 +80,54 @@ async function validateNewVersion(version: string | undefined) {
 
 async function gitStatusClean() {
   const git = run({
-    args: ["git", "status", "--porcelain"],
-    stdout: "piped"
+    cmd: ["git", "status", "--porcelain"],
+    stdout: "piped",
   });
   const output = await git.output();
+  git.close();
   return output.length === 0;
 }
 
 async function tagExists(version: string) {
   const git = run({
-    args: ["git", "tag", "--list", v(version)],
-    stdout: "piped"
+    cmd: ["git", "tag", "--list", v(version)],
+    stdout: "piped",
   });
   const output = await git.output();
+  git.close();
   return output.length > 0;
 }
 
 async function gitCommit(version: string, projectName: string) {
-  await run({
-    args: ["git", "add", "."]
-  }).status();
+  let cmd = run({
+    cmd: ["git", "add", "."],
+  });
 
-  await run({
-    args: ["git", "commit", "-m", `release: ${projectName}@${v(version)}`]
-  }).status();
+  await cmd.status();
+  cmd.close();
+
+  cmd = run({
+    cmd: ["git", "commit", "-m", `release: ${projectName}@${v(version)}`],
+  });
+
+  await cmd.status();
+  cmd.close();
 }
 
 async function createTag(version: string, signGitTag = false) {
   const tagArgs = signGitTag ? "-as" : "-a";
-  await run({
-    args: ["git", "tag", tagArgs, v(version), "-m", `release: ${v(version)}`]
-  }).status();
+  const cmd = run({
+    cmd: ["git", "tag", tagArgs, v(version), "-m", `release: ${v(version)}`],
+  });
+
+  await cmd.status();
+  cmd.close();
 }
 
 async function updateTemplates(
   oldVersion: string,
   newVersion: string,
-  files = []
+  files = [],
 ) {
   const matchVersion = new RegExp(`v${oldVersion}`, "g");
 
@@ -127,14 +139,14 @@ async function updateTemplates(
           path,
           content: decode(await readFile(path)).replace(
             matchVersion,
-            `v${newVersion}`
-          )
+            `v${newVersion}`,
+          ),
         };
       })
       .map(async (prom: Promise<{ path: string; content: string }>) => {
         const { path, content } = await prom;
-        writeFile(path, encode(content));
-      })
+        return writeFile(path, encode(content));
+      }),
   );
 }
 
