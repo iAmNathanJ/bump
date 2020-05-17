@@ -1,7 +1,7 @@
 on: push
 name: deno@v1.0.0
 jobs:
-  test:
+  ci:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -9,7 +9,14 @@ jobs:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     name: Deno ${{ matrix.deno }} test in ${{ matrix.os }}
     steps:
+      # needed for deno fmt on windows
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - uses: actions/checkout@master
+
       - name: Setup deno
         uses: denolib/setup-deno@master
         with:
