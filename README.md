@@ -1,6 +1,6 @@
 # `bump`
 
-![deno@v1.0.0](https://github.com/iAmNathanJ/bump/workflows/deno@v1.0.0/badge.svg)
+![deno@v1.6.3](https://github.com/iAmNathanJ/bump/workflows/deno@v1.6.3/badge.svg)
 
 This is my personal tool for versioning Deno projects. You might find it useful as well.
 
