@@ -1,5 +1,5 @@
 // adapted from https://github.com/lucascaro/denoversion/blob/v1.0.2/git.ts
-import { parse, encode, decode, join, colors } from "./deps.ts";
+import { colors, decode, encode, join, parse } from "./deps.ts";
 
 const { run, args, cwd, readFile, writeFile } = Deno;
 const projectRoot = cwd();

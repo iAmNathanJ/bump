@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "./dev-deps.ts";
-import { encode, decode, resolve } from "./deps.ts";
+import { decode, encode, resolve } from "./deps.ts";
 const { test, makeTempDir, readFile, writeFile } = Deno;
 
 /**
